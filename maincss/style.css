@@ -1,0 +1,310 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: #f4f7fd;
+  display: flex;
+  min-height: 100vh;
+  flex-wrap: wrap;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.main-content {
+  flex-grow: 1;
+  min-width: 0;
+  background-color: #f4f7fd;
+  display: flex;
+  flex-direction: column;
+}
+
+.board {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 20px;
+}
+
+.column {
+  background-color: #f4f7fd;
+  padding: 15px;
+  border-radius: 8px;
+  min-width: 300px;
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.column h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #828fa3;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #828fa3;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.status-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-todo {
+  background-color: #49c4e5;
+}
+.status-doing {
+  background-color: #635fc7;
+}
+.status-done {
+  background-color: #67e2ae;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(99, 95, 199, 0.1);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2b2c37;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(99, 95, 199, 0.2);
+}
+
+.boards-title {
+  font-size: 0.75rem;
+  color: #6b7280;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.active-board {
+  background-color: #635fc7;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  display: block;
+  border-top-right-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+  margin-left: 0;
+}
+
+.top-bar {
+  background-color: #ffffff;
+  padding: 20px;
+  border-bottom: 1px solid #e0e6ed;
+  display: flex;
+  align-items: center;
+  height: 80px;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.add-task-btn:hover {
+  background-color: #4a47b2;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .board {
+    flex-direction: column;
+  }
+
+  .column {
+    min-width: 100%;
+  }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(43, 44, 55, 0.5); /* darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  width: 480px;
+  max-width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+  color: #2b2c37;
+}
+
+.modal-content label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 12px 0 4px;
+  color: #828fa3;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #2b2c37;
+  background-color: #f9fafb;
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #d32f2f;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.close-modal:hover {
+  color: #b71c1c;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Button needed to be colourised as per design */
+#save-task-btn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+/* also made sure it follows design */
+#save-task-btn:hover {
+  background-color: #2563eb;
+}
+
+/*added colour and also made sure the mobile has a +*/
+.add-task-top {
+  background-color: #635fc7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.mobile-label {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-label {
+    display: none;
+  }
+  .mobile-label {
+    display: inline;
+    font-size: 1.5rem;
+  }
+}
+.create-task-btn {
+  background-color: #635fc7;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+}
