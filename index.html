@@ -12,18 +12,36 @@
     <link rel="stylesheet" href="maincss/style.css" />
   </head>
   <body>
-    <div class="sidebar hide-mobile">
-      <div class="top-bar hide-mobile">
-        <img src="images/logo-light.png" alt="Kanban Logo" class="logo" />
-      </div>
+    <button
+      id="sidebar-toggle"
+      class="mobile-menu-btn"
+      aria-label="Toggle sidebar"
+    >
+      🚫
+    </button>
 
-      <nav class="boards-section">
-        <h2 class="boards-title">ALL BOARDS (1)</h2>
-        <ul>
-          <li class="active-board">Launch Career</li>
-        </ul>
-      </nav>
+    <div id="sidebar-container" class="sidebar-container hide-mobile">
+      <div class="sidebar">
+        <div class="sidebar-header hide-mobile">
+          <img src="images/logo-light.png" alt="Kanban Logo" class="logo" />
+          <button
+            id="theme-toggle"
+            class="theme-toggle-btn"
+            aria-label="Toggle theme"
+          >
+            🌞
+          </button>
+        </div>
+        <nav class="boards-section">
+          <h2 class="boards-title">ALL BOARDS (1)</h2>
+          <ul>
+            <li class="active-board">Launch Career</li>
+          </ul>
+        </nav>
+      </div>
     </div>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
 
     <div class="main-content">
       <div class="top-bar">
@@ -40,14 +58,12 @@
             <span class="status-text">TODO</span>
           </div>
         </div>
-
         <div class="column" data-status="doing">
           <div class="status-item">
             <span class="status-circle status-doing"></span>
             <span class="status-text">DOING</span>
           </div>
         </div>
-
         <div class="column" data-status="done">
           <div class="status-item">
             <span class="status-circle status-done"></span>
@@ -59,24 +75,27 @@
       <div id="task-modal" class="modal hidden">
         <div class="modal-content">
           <h2 id="modal-heading">ADD NEW TASK</h2>
-
           <button id="close-modal" class="close-modal" aria-label="Close modal">
             X
           </button>
-
           <label for="modal-title">Title:</label>
           <input type="text" id="modal-title" />
-
           <label for="modal-description">Description:</label>
           <textarea id="modal-description"></textarea>
-
           <label for="modal-status">Status:</label>
           <select id="modal-status">
             <option value="todo">To Do</option>
             <option value="doing">In Progress</option>
             <option value="done">Done</option>
           </select>
-          <button id="save-task-btn">Create Task</button>
+          <div class="modal-buttons">
+            <button id="save-task-btn" class="btn btn-primary">
+              Create Task
+            </button>
+            <button id="delete-task-btn" class="btn btn-danger hidden">
+              Delete Task
+            </button>
+          </div>
         </div>
       </div>
     </div>

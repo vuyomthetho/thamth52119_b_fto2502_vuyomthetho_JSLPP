@@ -308,3 +308,119 @@ ul {
   color: #666;
   cursor: pointer;
 }
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background-color: #635fc7;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #ea5555;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+.mobile-menu-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #333;
+  z-index: 1001;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 250px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar-container.open {
+    left: 0;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+  }
+
+  .sidebar-backdrop.show {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
+}
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #f4f4f4;
+  --modal-bg: #ffffff;
+}
+
+body.dark {
+  --bg-color: #1e1e2f;
+  --text-color: #ffffff;
+  --card-bg: #2c2c3f;
+  --modal-bg: #2a2a3a;
+}
+
+/* Use the variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-content {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+  padding: 2rem;
+  border-radius: 10px;
+}
