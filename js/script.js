@@ -172,6 +172,28 @@ saveTaskBtn.addEventListener("click", () => {
   const title = modalTitle.value.trim();
   const description = modalDescription.value.trim();
   const status = modalStatus.value;
+  const deleteTaskBtn = document.getElementById("delete-task-btn");
+
+  deleteTaskBtn.addEventListener("click", () => {
+    if (!currentEditingTask) return;
+
+    const confirmDelete = confirm("Are you sure you wanna delete");
+
+    if (!confirmDelete) return;
+
+    // Remove from tasks array
+    tasks = tasks.filter((task) => task.id !== currentEditingTask.id);
+
+    // Remove from DOM
+    const card = document.querySelector(`[data-id="${currentEditingTask.id}"]`);
+    if (card) card.remove();
+
+    // Save updated task list to localStorage
+    saveTasksToLocalStorage();
+
+    // Close modal
+    modal.classList.add("hidden");
+  });
 
   if (!title) return; //ensure that there must be something written so its never blank
 
