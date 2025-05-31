@@ -28,6 +28,29 @@ const addTaskTopBtn = document.getElementById("add-task-btn");
 function saveTasksToLocalStorage() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarToggle = document.getElementById("sidebar-toggle");
+  const sidebarContainer = document.getElementById("sidebar-container");
+  const sidebarBackdrop = document.getElementById("sidebar-backdrop");
+
+  sidebarToggle.addEventListener("click", () => {
+    sidebarContainer.classList.add("open");
+    sidebarBackdrop.classList.add("show");
+  });
+
+  sidebarBackdrop.addEventListener("click", () => {
+    sidebarContainer.classList.remove("open");
+    sidebarBackdrop.classList.remove("show");
+  });
+
+  // Close on ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      sidebarContainer.classList.remove("open");
+      sidebarBackdrop.classList.remove("show");
+    }
+  });
+});
 
 // Display each task card in the correct column
 function renderTasks(tasks) {

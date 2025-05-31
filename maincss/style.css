@@ -74,6 +74,7 @@ ul {
   flex-direction: column;
   gap: 12px;
 }
+
 .hide-sidebar-btn {
   background-color: #635fc7;
   color: white;
