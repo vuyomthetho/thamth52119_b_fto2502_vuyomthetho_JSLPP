@@ -51,5 +51,5 @@ This is a simple Kanban app to keep your tasks organized. Add, edit, and move ta
 
 ## Author
 
-Made with by Vuyo Thando Phila Mthetho  
+Made by Vuyo Thando Phila Mthetho  
 CodeSpade Academy | 2025
