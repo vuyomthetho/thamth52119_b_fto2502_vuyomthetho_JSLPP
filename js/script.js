@@ -1,5 +1,3 @@
-// === INITIAL TASK DATA ===
-// This is the default task shown when the app first loads (if there's nothing saved in localStorage yet)
 const initialTasks = [
   {
     id: 1,
@@ -14,7 +12,7 @@ const initialTasks = [
 let tasks; // This will store the current task list (loaded from localStorage or default)
 let currentEditingTask = null; // Used to keep track of which task is being edited in the modal
 
-// === MODAL ELEMENTS ===
+//modals
 // These are the input fields and buttons inside the popup modal
 const modal = document.getElementById("task-modal");
 const modalTitle = document.getElementById("modal-title");
@@ -34,8 +32,6 @@ const sidebarContainer = document.getElementById("sidebar-container");
 const sidebarBackdrop = document.getElementById("sidebar-backdrop");
 const sidebarCloseBtn = document.getElementById("sidebar-close");
 const themeToggle = document.getElementById("themeToggle");
-
-// === UTILITY FUNCTIONS ===
 
 // Save the current tasks list to localStorage so it remembers them after refreshing
 function saveTasksToLocalStorage() {
@@ -115,8 +111,7 @@ function renderTasks(taskList) {
       card.addEventListener("click", () => openModal(task));
     });
 }
-
-// === EVENT LISTENERS ===
+//event listeners
 
 // When we click the top "Add Task" button
 addTaskTopBtn.addEventListener("click", () => openModal());
@@ -168,34 +163,37 @@ deleteTaskBtn.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
 
-// === PAGE LOAD: Setup the app when the page finishes loading ===
-document.addEventListener("DOMContentLoaded", () => {
-  const saved = localStorage.getItem("tasks");
+//PAGE LOAD: Setup the app when the page finishes loading ===
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchTasksFromAPI();
+
+  // Fallback: if fetch failed, use localStorage or initialTasks
+  const saved =
+    localStorage.getItem("kanban-data") || localStorage.getItem("tasks");
   tasks = saved ? JSON.parse(saved) : [...initialTasks];
 
-  // If any task is missing a priority, default it to 'medium'
+  // Set default priority if missing
   tasks.forEach((task) => {
     if (!task.priority) task.priority = "medium";
   });
 
-  saveTasksToLocalStorage();
+  saveTasksToLocalStorage(); // Save to "tasks" key for consistency
   renderTasks(tasks);
 
-  // Apply dark mode if it was previously saved
+  // === Dark mode setup ===
   const isDark = localStorage.getItem("dark-mode") === "true";
   if (isDark) {
     document.body.classList.add("dark-mode");
     themeToggle.checked = true;
   }
 
-  // Listen for changes to the dark mode toggle
   themeToggle.addEventListener("change", () => {
     document.body.classList.toggle("dark-mode");
     localStorage.setItem("dark-mode", themeToggle.checked);
   });
 });
 
-// === SIDEBAR EVENTS ===
+//sidebar
 
 // Toggle sidebar collapse when sidebar toggle button is clicked
 toggleSidebarBtn.addEventListener("click", () => {
@@ -205,3 +203,32 @@ toggleSidebarBtn.addEventListener("click", () => {
     ? "Show Sidebar"
     : "Hide Sidebar";
 });
+async function fetchTasksFromAPI() {
+  // STEP 1: Show loading message
+  const loadingMessage = document.createElement("p");
+  loadingMessage.textContent = "Loading tasks...";
+  loadingMessage.id = "loading-msg";
+  document.body.appendChild(loadingMessage);
+
+  try {
+    // STEP 2: Fetch tasks from the online API
+    const response = await fetch("https://jsl-kanban-api.vercel.app/");
+    if (!response.ok) throw new Error("Failed to fetch");
+
+    // STEP 3: Get the tasks from the response
+    const data = await response.json();
+
+    // STEP 4: Save the tasks to localStorage
+    localStorage.setItem("tasks", JSON.stringify(data));
+
+    // STEP 5: Render them in your app
+    renderTasks(data);
+
+    // STEP 6: Remove the loading message
+    loadingMessage.remove();
+  } catch (error) {
+    // STEP 7: Show error if something breaks
+    loadingMessage.textContent = "❌ Error loading tasks. Please try again.";
+    console.error("Fetch error:", error);
+  }
+}
