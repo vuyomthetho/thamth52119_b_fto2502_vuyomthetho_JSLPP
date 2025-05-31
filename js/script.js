@@ -1,219 +1,207 @@
-// Initial list of default tasks to load if none exist in localStorage
+// === INITIAL TASK DATA ===
+// This is the default task shown when the app first loads (if there's nothing saved in localStorage yet)
 const initialTasks = [
   {
     id: 1,
     title: "Understand Given User Stories 🧠",
     description:
       "As a person building my project, I want to read and interpret the provided user stories so that I can plan and implement features that meet the user's needs.",
-    status: "todo",
+    status: "todo", // Other options: 'doing', 'done'
+    priority: "medium", // Other options: 'high', 'low'
   },
-  // ... other tasks (same structure)
 ];
 
-// Variables to hold task data and the currently edited task
-let tasks;
-let currentEditingTask = null;
+let tasks; // This will store the current task list (loaded from localStorage or default)
+let currentEditingTask = null; // Used to keep track of which task is being edited in the modal
 
-// Modal elements for viewing/creating/editing tasks
+// === MODAL ELEMENTS ===
+// These are the input fields and buttons inside the popup modal
 const modal = document.getElementById("task-modal");
 const modalTitle = document.getElementById("modal-title");
 const modalDescription = document.getElementById("modal-description");
 const modalStatus = document.getElementById("modal-status");
+const modalPriority = document.getElementById("modal-priority");
+const modalHeading = document.getElementById("modal-heading");
 const closeModalBtn = document.getElementById("close-modal");
 const saveTaskBtn = document.getElementById("save-task-btn");
 const deleteTaskBtn = document.getElementById("delete-task-btn");
 const addTaskTopBtn = document.getElementById("add-task-btn");
 
-// Save tasks to localStorage so they persist after refresh
+// === SIDEBAR & THEME ELEMENTS ===
+// These handle sidebar toggle and dark/light theme switch
+const toggleSidebarBtn = document.getElementById("toggleSidebar");
+const sidebarContainer = document.getElementById("sidebar-container");
+const sidebarBackdrop = document.getElementById("sidebar-backdrop");
+const sidebarCloseBtn = document.getElementById("sidebar-close");
+const themeToggle = document.getElementById("themeToggle");
+
+// === UTILITY FUNCTIONS ===
+
+// Save the current tasks list to localStorage so it remembers them after refreshing
 function saveTasksToLocalStorage() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebarToggle = document.getElementById("sidebar-toggle");
-  const sidebarContainer = document.getElementById("sidebar-container");
-  const sidebarBackdrop = document.getElementById("sidebar-backdrop");
 
-  sidebarToggle.addEventListener("click", () => {
-    sidebarContainer.classList.add("open");
-    sidebarBackdrop.classList.add("show");
-  });
-
-  sidebarBackdrop.addEventListener("click", () => {
-    sidebarContainer.classList.remove("open");
-    sidebarBackdrop.classList.remove("show");
-  });
-
-  // Close on ESC
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      sidebarContainer.classList.remove("open");
-      sidebarBackdrop.classList.remove("show");
-    }
-  });
-});
-
-// Display each task card in the correct column
-function renderTasks(tasks) {
-  tasks.forEach((task) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.textContent = task.title;
-    card.dataset.id = task.id;
-
-    const column = document.querySelector(
-      `.column[data-status="${task.status}"]`
-    );
-    column.appendChild(card);
-
-    // Open modal to edit task when clicked
-    card.addEventListener("click", () => {
-      openModal(task);
-    });
-  });
+// Hide the mobile sidebar and backdrop when user clicks outside or close button
+function closeSidebar() {
+  sidebarContainer.classList.remove("visible");
+  sidebarBackdrop.classList.remove("active");
 }
 
-// Fill modal with task data to edit
-function openModal(task) {
+// Open the modal for either adding a new task or editing an existing one
+function openModal(task = null) {
   currentEditingTask = task;
+
+  if (task) {
+    // We're editing an existing task
+    modalTitle.value = task.title;
+    modalDescription.value = task.description;
+    modalStatus.value = task.status;
+    modalPriority.value = task.priority || "medium";
+    modalHeading.textContent = "EDIT TASK";
+    saveTaskBtn.textContent = "Save Changes";
+    deleteTaskBtn.classList.remove("hidden");
+  } else {
+    // We're adding a new task
+    modalTitle.value = "";
+    modalDescription.value = "";
+    modalStatus.value = "todo";
+    modalPriority.value = "medium";
+    modalHeading.textContent = "ADD NEW TASK";
+    saveTaskBtn.textContent = "Create Task";
+    deleteTaskBtn.classList.add("hidden");
+  }
+
+  // Show the modal
   modal.classList.remove("hidden");
-  modalTitle.value = task.title;
-  modalDescription.value = task.description;
-  modalStatus.value = task.status;
-  document.getElementById("modal-heading").textContent = "EDIT TASK";
-  saveTaskBtn.textContent = "Save Changes";
-  deleteTaskBtn.classList.remove("hidden");
 }
 
-// When user clicks "+ Add New Task"
-addTaskTopBtn.addEventListener("click", () => {
-  currentEditingTask = null;
-  modalTitle.value = "";
-  modalDescription.value = "";
-  modalStatus.value = "todo";
-  document.getElementById("modal-heading").textContent = "ADD NEW TASK";
-  saveTaskBtn.textContent = "Create Task";
-  deleteTaskBtn.classList.add("hidden");
-  modal.classList.remove("hidden");
-});
+// Render (display) all tasks in the correct columns (todo, doing, done)
+function renderTasks(taskList) {
+  // First, remove all old task cards
+  const columns = document.querySelectorAll(".column");
+  columns.forEach((col) =>
+    col.querySelectorAll(".card").forEach((c) => c.remove())
+  );
 
-// Close modal when "X" is clicked
-closeModalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-});
+  // These help us sort by priority and display emojis
+  const priorityMap = { high: 0, medium: 1, low: 2 };
+  const priorityEmoji = { high: "🔴", medium: "🟡", low: "🟢" };
 
-// Save or update task when "Save" or "Create" button is clicked
+  // Sort and render each task
+  taskList
+    .slice()
+    .sort(
+      (a, b) =>
+        priorityMap[a.priority || "medium"] -
+        priorityMap[b.priority || "medium"]
+    )
+    .forEach((task) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.id = task.id;
+
+      const emoji =
+        task.status !== "done" ? priorityEmoji[task.priority] || "🟡" : "";
+
+      card.innerHTML = `<div class="card-title">${emoji} ${task.title}</div>`;
+
+      const column = document.querySelector(
+        `.column[data-status="${task.status}"]`
+      );
+      column.appendChild(card);
+
+      // Clicking the card opens the modal for editing
+      card.addEventListener("click", () => openModal(task));
+    });
+}
+
+// === EVENT LISTENERS ===
+
+// When we click the top "Add Task" button
+addTaskTopBtn.addEventListener("click", () => openModal());
+
+// Close modal when clicking the close button
+closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+// Save (or update) the task when the save button is clicked
 saveTaskBtn.addEventListener("click", () => {
   const title = modalTitle.value.trim();
   const description = modalDescription.value.trim();
   const status = modalStatus.value;
+  const priority = modalPriority.value;
 
-  if (!title) return; // Prevent empty tasks
+  // Don't save if the title is empty
+  if (!title) return;
 
-  // If editing existing task
   if (currentEditingTask) {
+    // Update existing task
     currentEditingTask.title = title;
     currentEditingTask.description = description;
-
-    const oldCard = document.querySelector(
-      `[data-id="${currentEditingTask.id}"]`
-    );
-    oldCard.textContent = title;
-
-    // If task status changed, move it to a new column
-    if (currentEditingTask.status !== status) {
-      const newColumn = document.querySelector(
-        `.column[data-status="${status}"]`
-      );
-      newColumn.appendChild(oldCard);
-      currentEditingTask.status = status;
-    }
-
-    saveTasksToLocalStorage();
+    currentEditingTask.status = status;
+    currentEditingTask.priority = priority;
   } else {
     // Create new task
     const newTask = {
-      id: Date.now(),
+      id: Date.now(), // unique id
       title,
       description,
       status,
+      priority,
     };
-
     tasks.push(newTask);
-    saveTasksToLocalStorage();
-
-    const column = document.querySelector(`.column[data-status="${status}"]`);
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.textContent = newTask.title;
-    card.dataset.id = newTask.id;
-    column.appendChild(card);
-
-    // Set up click to edit new task
-    card.addEventListener("click", () => {
-      openModal(newTask);
-    });
   }
 
-  modal.classList.add("hidden");
+  saveTasksToLocalStorage(); // Save to localStorage
+  renderTasks(tasks); // Re-render the tasks
+  modal.classList.add("hidden"); // Close modal
 });
 
-// Delete task when delete button is clicked
+// Delete a task when the delete button is clicked
 deleteTaskBtn.addEventListener("click", () => {
   if (!currentEditingTask) return;
-  const confirmDelete = confirm("Are you sure you wanna delete?");
-  if (!confirmDelete) return;
+  if (!confirm("Are you sure you want to delete this task?")) return;
 
   tasks = tasks.filter((task) => task.id !== currentEditingTask.id);
-  const card = document.querySelector(`[data-id="${currentEditingTask.id}"]`);
-  if (card) card.remove();
   saveTasksToLocalStorage();
+  renderTasks(tasks);
   modal.classList.add("hidden");
 });
 
-// Load tasks when page is ready
+// === PAGE LOAD: Setup the app when the page finishes loading ===
 document.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("tasks");
   tasks = saved ? JSON.parse(saved) : [...initialTasks];
+
+  // If any task is missing a priority, default it to 'medium'
+  tasks.forEach((task) => {
+    if (!task.priority) task.priority = "medium";
+  });
+
+  saveTasksToLocalStorage();
   renderTasks(tasks);
-});
 
-// Sidebar toggle for mobile/desktop
-const toggleBtn = document.getElementById("sidebar-toggle");
-const sidebar = document.getElementById("sidebar-container");
-const backdrop = document.getElementById("sidebar-backdrop");
-
-// Show/hide sidebar
-toggleBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-  backdrop.classList.toggle("show");
-});
-
-// Close sidebar when clicking outside
-backdrop.addEventListener("click", () => {
-  sidebar.classList.remove("open");
-  backdrop.classList.remove("show");
-});
-const themeToggleBtn = document.getElementById("theme-toggle");
-
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.getElementById("themeToggle");
+  // Apply dark mode if it was previously saved
   const isDark = localStorage.getItem("dark-mode") === "true";
-
   if (isDark) {
     document.body.classList.add("dark-mode");
-    toggle.checked = true;
+    themeToggle.checked = true;
   }
 
-  toggle.addEventListener("change", () => {
+  // Listen for changes to the dark mode toggle
+  themeToggle.addEventListener("change", () => {
     document.body.classList.toggle("dark-mode");
-    localStorage.setItem("dark-mode", toggle.checked);
+    localStorage.setItem("dark-mode", themeToggle.checked);
   });
 });
-document.getElementById("toggleSidebar").addEventListener("click", () => {
+
+// === SIDEBAR EVENTS ===
+
+// Toggle sidebar collapse when sidebar toggle button is clicked
+toggleSidebarBtn.addEventListener("click", () => {
   const sidebar = document.querySelector(".sidebar");
-  const btn = document.getElementById("toggleSidebar");
   sidebar.classList.toggle("collapsed");
-  btn.textContent = sidebar.classList.contains("collapsed")
+  toggleSidebarBtn.textContent = sidebar.classList.contains("collapsed")
     ? "Show Sidebar"
     : "Hide Sidebar";
 });

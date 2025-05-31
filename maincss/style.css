@@ -341,10 +341,12 @@ input:checked + .slider:before {
     width: 80%;
     max-width: 250px;
     height: 100%;
-    background-color: #fff;
+    background-color: var(--sidebar-bg);
     z-index: 1000;
+    transition: left 0.3s ease;
   }
-  .sidebar-container.open {
+
+  .sidebar-container.visible {
     left: 0;
   }
   .sidebar-backdrop {
@@ -360,4 +362,17 @@ input:checked + .slider:before {
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 999;
   }
+}
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: none;
+}
+.sidebar-backdrop.active {
+  display: block;
 }
