@@ -4,7 +4,7 @@ const initialTasks = [
     title: "Understand Given User Stories 🧠",
     description:
       "As a person building my project, I want to read and interpret the provided user stories so that I can plan and implement features that meet the user's needs.",
-    status: "todo", // Other options: 'doing', 'done'
+    status: "todo",
     priority: "medium", // Other options: 'high', 'low'
   },
 ];
@@ -25,7 +25,6 @@ const saveTaskBtn = document.getElementById("save-task-btn");
 const deleteTaskBtn = document.getElementById("delete-task-btn");
 const addTaskTopBtn = document.getElementById("add-task-btn");
 
-// === SIDEBAR & THEME ELEMENTS ===
 // These handle sidebar toggle and dark/light theme switch
 const toggleSidebarBtn = document.getElementById("toggleSidebar");
 const sidebarContainer = document.getElementById("sidebar-container");

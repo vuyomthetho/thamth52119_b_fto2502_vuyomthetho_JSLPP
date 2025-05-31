@@ -39,8 +39,11 @@ This is a simple Kanban app to keep your tasks organized. Add, edit, and move ta
 - CSS
 - JavaScript
 - [Kanban API](https://jsl-kanban-api.vercel.app/)
-- LocalStorage
-- Netlify (for hosting)
+- Netlify
+
+## Netlify link
+
+- https://thandokanbanboard.netlify.app/
 
 ## Author
 
