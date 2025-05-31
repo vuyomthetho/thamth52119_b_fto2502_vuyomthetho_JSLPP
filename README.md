@@ -45,6 +45,10 @@ This is a simple Kanban app to keep your tasks organized. Add, edit, and move ta
 
 - https://thandokanbanboard.netlify.app/
 
+## Video link
+
+- https://www.veed.io/view/67c2a087-2c43-4c90-aadc-40fab81cc0b0?panel=share
+
 ## Author
 
 Made with by Vuyo Thando Phila Mthetho  

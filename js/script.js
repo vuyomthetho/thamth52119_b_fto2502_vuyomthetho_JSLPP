@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   saveTasksToLocalStorage(); // Save to "tasks" key for consistency
   renderTasks(tasks);
 
-  // === Dark mode setup ===
+  //Dark mode setup
   const isDark = localStorage.getItem("dark-mode") === "true";
   if (isDark) {
     document.body.classList.add("dark-mode");
