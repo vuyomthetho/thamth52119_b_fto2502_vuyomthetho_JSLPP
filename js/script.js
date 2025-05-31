@@ -172,16 +172,25 @@ backdrop.addEventListener("click", () => {
 });
 const themeToggleBtn = document.getElementById("theme-toggle");
 
-// Load saved theme from localStorage
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-  themeToggleBtn.textContent = "🌙";
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("themeToggle");
+  const isDark = localStorage.getItem("dark-mode") === "true";
 
-// Toggle on click
-themeToggleBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  const isDark = document.body.classList.contains("dark");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-  themeToggleBtn.textContent = isDark ? "🌙" : "🌞";
+  if (isDark) {
+    document.body.classList.add("dark-mode");
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark-mode", toggle.checked);
+  });
+});
+document.getElementById("toggleSidebar").addEventListener("click", () => {
+  const sidebar = document.querySelector(".sidebar");
+  const btn = document.getElementById("toggleSidebar");
+  sidebar.classList.toggle("collapsed");
+  btn.textContent = sidebar.classList.contains("collapsed")
+    ? "Show Sidebar"
+    : "Hide Sidebar";
 });
